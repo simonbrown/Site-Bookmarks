@@ -1,14 +1,15 @@
 {
 	"name": "SiteBookmarks",
-	"version": "1.0",
+	"version": "0.1",
 	"background_page": "background.html",
-	"page_action":
-	{
-		"default_icon": "pageaction.png",
-		"default_popup": "popup.html"
-	},
 	"permissions":
 	[
-		"tabs", "bookmarks"
-	]
+		"bookmarks", "contextMenus"
+	],
+	"icons":
+	{
+		"16": "icon16.png",
+		"48": "icon48.png",
+		"128": "icon128.png"
+	}
 }

@@ -23,12 +23,11 @@ function populatebookmarkmenu()
 				var curdomain = getdomain(bookmarklist[i].url);
 				
 				var menuId = undefined;
-				
 				if (domainMenus[curdomain] == undefined)
 				{
 					menuId = chrome.contextMenus.create({
-						"title": getdomain(bookmarklist[i].url),
-						"documentUrlPatterns": [ "*://"+getdomain(bookmarklist[i].url)+"/*" ]
+						"title": curdomain,
+						"documentUrlPatterns": [ "*://"+curdomain+"/*" ]
 					}, undefined);
 					
 					domainMenus[curdomain] = menuId;

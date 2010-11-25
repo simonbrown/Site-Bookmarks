@@ -1,47 +1,47 @@
 function populatebookmarkmenu()
 {
-	chrome.contextMenus.removeAll(undefined);
-	
-	chrome.bookmarks.getTree(function(results) {
-		// Add the bookmarks a linear array.
-		var bookmarklist = []
-		var listbookmarks = function(bookmarks) {
-			for (var i in bookmarks) {
-				if (bookmarks[i].children) listbookmarks(bookmarks[i].children);
-				else {
-					bookmarklist.push(bookmarks[i]);
+	chrome.contextMenus.removeAll(function() {
+		chrome.bookmarks.getTree(function(results) {
+			// Add the bookmarks a linear array.
+			var bookmarklist = []
+			var listbookmarks = function(bookmarks) {
+				for (var i in bookmarks) {
+					if (bookmarks[i].children) listbookmarks(bookmarks[i].children);
+					else {
+						bookmarklist.push(bookmarks[i]);
+					}
 				}
 			}
-		}
-		listbookmarks(results);
-		
-		if (bookmarklist.length > 0)
-		{
-			var domainMenus = {}
+			listbookmarks(results);
 			
-			for (var i in bookmarklist) {
-				var curdomain = getdomain(bookmarklist[i].url);
+			if (bookmarklist.length > 0)
+			{
+				var domainMenus = {}
 				
-				var menuId = undefined;
-				if (domainMenus[curdomain] == undefined)
-				{
-					menuId = chrome.contextMenus.create({
-						"title": curdomain,
-						"documentUrlPatterns": [ "*://"+curdomain+"/*" ]
-					}, undefined);
+				for (var i in bookmarklist) {
+					var curdomain = getdomain(bookmarklist[i].url);
 					
-					domainMenus[curdomain] = menuId;
-				} else {
-					menuId = domainMenus[curdomain];
+					var menuId = undefined;
+					if (domainMenus[curdomain] == undefined)
+					{
+						menuId = chrome.contextMenus.create({
+							"title": curdomain,
+							"documentUrlPatterns": [ "*://"+curdomain+"/*" ]
+						}, undefined);
+						
+						domainMenus[curdomain] = menuId;
+					} else {
+						menuId = domainMenus[curdomain];
+					}
+					
+					chrome.contextMenus.create({
+						"title": bookmarklist[i].title,
+						"parentId": menuId,
+						"onclick": opentab.curry(bookmarklist[i].url)
+					}, undefined);
 				}
-				
-				chrome.contextMenus.create({
-					"title": bookmarklist[i].title,
-					"parentId": menuId,
-					"onclick": opentab.curry(bookmarklist[i].url)
-				}, undefined);
 			}
-		}
+		});
 	});
 }
 populatebookmarkmenu();

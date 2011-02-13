@@ -51,8 +51,20 @@ chrome.bookmarks.onCreated.addListener(function(id, bookmark) { populatebookmark
 chrome.bookmarks.onRemoved.addListener(function(id, removeInfo) { populatebookmarkmenu(); });
 chrome.bookmarks.onImportEnded.addListener(function() { populatebookmarkmenu(); } );
 
-function opentab(url) { chrome.tabs.create({ "url": url }); }
 function toArray(enum) { return Array.prototype.slice.call(enum); }
+
+function opentab(url, info, tab)
+{
+	if (localStorage["innewtab"] == "true")
+	{
+		chrome.tabs.create({ "url": url });
+		
+	}
+	else
+	{
+		chrome.tabs.update(tab["id"], { "url": url });
+	}
+}
 
 function getdomain(input)
 {

@@ -17,7 +17,7 @@
 					localStorage["innewtab"] = $("#newtabcb").attr("checked") ? "true" : "false";
 				});
 				
-				if (localStorage["innewtab"] == "true") $("#newtabcb").attr("checked", true);
+				if (localStorage["innewtab"] == "true" || localStorage["innewtab"] == undefined) $("#newtabcb").attr("checked", true);
 				
 			});
 		</script>

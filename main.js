@@ -55,7 +55,7 @@ function toArray(enum) { return Array.prototype.slice.call(enum); }
 
 function opentab(url, info, tab)
 {
-	if (localStorage["innewtab"] == "true")
+	if (localStorage["innewtab"] == undefined || localStorage["innewtab"] == "true")
 	{
 		chrome.tabs.create({ "url": url });
 		

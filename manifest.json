@@ -1,5 +1,6 @@
 {
 	"name": "SiteBookmarks",
+	"description": "View your bookmarks on the current site from the context (right-click) menu.",
 	"version": "1.2",
 	"background_page": "background.html",
 	"permissions":

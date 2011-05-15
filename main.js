@@ -1,55 +1,59 @@
+var domainMenus = {};
+
+function registerBookmark(bookmark)
+{
+	var curdomain = getdomain(bookmark.url);
+	
+	var domainMenuId = undefined;
+	if (domainMenus[curdomain] == undefined)
+	{
+		var domainMenuId = chrome.contextMenus.create({
+			"title": curdomain,
+			"documentUrlPatterns": [ "*://"+curdomain+"/*" ]
+		}, undefined);
+		if (curdomain == undefined) console.log(bookmark);
+		
+		domainMenus[curdomain] = domainMenuId;
+	} else {
+		domainMenuId = domainMenus[curdomain];
+	}
+	
+	var itemTitle = bookmark.title;
+	if (itemTitle == "" || itemTitle == undefined) itemTitle = "Untitled bookmark";
+	
+	var bookmarkMenuId = chrome.contextMenus.create({
+		"title": itemTitle,
+		"parentId": domainMenuId,
+		"onclick": opentab.curry(bookmark.url)
+	}, undefined);
+}
+
 function populatebookmarkmenu()
 {
 	chrome.contextMenus.removeAll(function() {
+		domainMenus = {};
+		bookmarkMenuId = {};
 		chrome.bookmarks.getTree(function(results) {
-			// Add the bookmarks a linear array.
-			var bookmarklist = []
+			// Add the bookmarks to a linear array.
+			var bookmarklist = [];
 			var listbookmarks = function(bookmarks) {
 				for (var i in bookmarks) {
 					if (bookmarks[i].children) listbookmarks(bookmarks[i].children);
 					else {
-						bookmarklist.push(bookmarks[i]);
+						registerBookmark(bookmarks[i]);
 					}
 				}
 			}
 			listbookmarks(results);
-			
-			if (bookmarklist.length > 0)
-			{
-				var domainMenus = {}
-				
-				for (var i in bookmarklist) {
-					var curdomain = getdomain(bookmarklist[i].url);
-					
-					var menuId = undefined;
-					if (domainMenus[curdomain] == undefined)
-					{
-						menuId = chrome.contextMenus.create({
-							"title": curdomain,
-							"documentUrlPatterns": [ "*://"+curdomain+"/*" ]
-						}, undefined);
-						
-						domainMenus[curdomain] = menuId;
-					} else {
-						menuId = domainMenus[curdomain];
-					}
-					
-					chrome.contextMenus.create({
-						"title": bookmarklist[i].title,
-						"parentId": menuId,
-						"onclick": opentab.curry(bookmarklist[i].url)
-					}, undefined);
-				}
-			}
 		});
 	});
 }
 populatebookmarkmenu();
 
 chrome.bookmarks.onChanged.addListener(function(id, changeInfo) { populatebookmarkmenu(); });
+chrome.bookmarks.onImportEnded.addListener(function() { populatebookmarkmenu(); } );
 chrome.bookmarks.onCreated.addListener(function(id, bookmark) { populatebookmarkmenu(); });
 chrome.bookmarks.onRemoved.addListener(function(id, removeInfo) { populatebookmarkmenu(); });
-chrome.bookmarks.onImportEnded.addListener(function() { populatebookmarkmenu(); } );
 
 function toArray(enum) { return Array.prototype.slice.call(enum); }
 
@@ -68,6 +72,9 @@ function opentab(url, info, tab)
 
 function getdomain(input)
 {
+	if (input.indexOf("file:///") == 0) return "files";
+	if (input.indexOf("javascript:") == 0) return "bookmarklets";
+	
 	var urlParts = input.split("/");
 	var urlDomain = urlParts[2];
 	

@@ -1,7 +1,7 @@
 {
 	"name": "SiteBookmarks",
 	"description": "View your bookmarks on the current site from the context (right-click) menu.",
-	"version": "1.4",
+	"version": "1.5",
 	"background_page": "background.html",
 	"permissions":
 	[
@@ -13,5 +13,6 @@
 		"48": "icon48.png",
 		"128": "icon128.png"
 	},
-	"options_page": "options.html"
+	"options_page": "options.html",
+	"minimum_chrome_version": "14.0"
 }

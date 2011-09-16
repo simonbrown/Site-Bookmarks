@@ -55,7 +55,7 @@ chrome.bookmarks.onImportEnded.addListener(function() { populatebookmarkmenu(); 
 chrome.bookmarks.onCreated.addListener(function(id, bookmark) { populatebookmarkmenu(); });
 chrome.bookmarks.onRemoved.addListener(function(id, removeInfo) { populatebookmarkmenu(); });
 
-function toArray(enum) { return Array.prototype.slice.call(enum); }
+function toArray(args) { return Array.prototype.slice.call(args); }
 
 function opentab(url, info, tab)
 {

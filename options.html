@@ -11,16 +11,7 @@
 		</style>
 		
 		<script type="text/javascript" src="jquery-1.5.min.js"></script>
-		<script type="text/javascript">
-			$(document).ready(function() {
-				$("#newtabcb").change(function() {
-					localStorage["innewtab"] = $("#newtabcb").attr("checked") ? "true" : "false";
-				});
-				
-				if (localStorage["innewtab"] == "true" || localStorage["innewtab"] == undefined) $("#newtabcb").attr("checked", true);
-				
-			});
-		</script>
+		<script type="text/javascript" src="options.js"></script>
 		
 		<title>SiteBookmarks Options</title>
 	</head>
